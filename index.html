@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blue Bell Cafe - Premium Fast Food | Karachi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-blue: #0066CC;
+            --dark-blue: #001a33;
+            --neon-blue: #00d4ff;
+            --accent-blue: #0099ff;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #000814;
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        .font-display {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .geometric-pattern {
+            background-image: 
+                linear-gradient(30deg, #001a33 12%, transparent 12.5%, transparent 87%, #001a33 87.5%, #001a33),
+                linear-gradient(150deg, #001a33 12%, transparent 12.5%, transparent 87%, #001a33 87.5%, #001a33),
+                linear-gradient(30deg, #001a33 12%, transparent 12.5%, transparent 87%, #001a33 87.5%, #001a33),
+                linear-gradient(150deg, #001a33 12%, transparent 12.5%, transparent 87%, #001a33 87.5%, #001a33),
+                linear-gradient(60deg, #002244 25%, transparent 25.5%, transparent 75%, #002244 75%, #002244),
+                linear-gradient(60deg, #002244 25%, transparent 25.5%, transparent 75%, #002244 75%, #002244);
+            background-size: 40px 70px;
+            background-position: 0 0, 0 0, 20px 35px, 20px 35px, 0 0, 20px 35px;
+        }
+        
+        .menu-card {
+            background: linear-gradient(135deg, rgba(0, 102, 204, 0.1) 0%, rgba(0, 26, 51, 0.8) 100%);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .menu-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: var(--neon-blue);
+            box-shadow: 0 10px 40px rgba(0, 212, 255, 0.3);
+        }
+        
+        .category-header {
+            background: linear-gradient(90deg, #0066CC 0%, #0099ff 100%);
+            box-shadow: 0 4px 15px rgba(0, 102, 204, 0.5);
+        }
+        
+        .price-tag {
+            background: linear-gradient(135deg, #0066CC 0%, #0099ff 100%);
+            box-shadow: 0 2px 10px rgba(0, 102, 204, 0.5);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #0066CC 0%, #0099ff 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0, 153, 255, 0.5);
+        }
+        
+        .cart-sidebar {
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .cart-sidebar.open {
+            transform: translateX(0);
+        }
+        
+        .quantity-btn {
+            background: rgba(0, 212, 255, 0.2);
+            border: 1px solid rgba(0, 212, 255, 0.5);
+            transition: all 0.2s;
+        }
+        
+        .quantity-btn:hover {
+            background: rgba(0, 212, 255, 0.4);
+        }
+        
+        .floating-bell {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        
+        .neon-glow {
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5), 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+        
+        .scroll-indicator {
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
+        .tab-active {
+            background: linear-gradient(135deg, #0066CC 0%, #0099ff 100%);
+            color: white;
+        }
+        
+        .tab-inactive {
+            background: rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+        }
+        
+        .tab-inactive:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .order-btn {
+            background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+            transition: all 0.3s;
+        }
+        
+        .order-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.6);
+        }
+        
+        .notification {
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="geometric-pattern min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-black/80 backdrop-blur-md border-b border-blue-500/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-full flex items-center justify-center floating-bell">
+                        <i data-lucide="bell" class="text-white w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold font-display neon-glow">Blue Bell Cafe</h1>
+                        <p class="text-xs text-cyan-400">Premium Fast Food</p>
+                    </div>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-gray-300 hover:text-cyan-400 transition-colors">Home</a>
+                    <a href="#menu" class="text-gray-300 hover:text-cyan-400 transition-colors">Menu</a>
+                    <a href="#about" class="text-gray-300 hover:text-cyan-400 transition-colors">About</a>
+                    <a href="#contact" class="text-gray-300 hover:text-cyan-400 transition-colors">Contact</a>
+                </div>
+
+                <button onclick="toggleCart()" class="relative bg-blue-600/20 border border-blue-500/50 px-4 py-2 rounded-full flex items-center space-x-2 hover:bg-blue-600/40 transition-all">
+                    <i data-lucide="shopping-cart" class="w-5 h-5 text-cyan-400"></i>
+                    <span class="hidden sm:inline">Cart</span>
+                    <span id="cart-count" class="bg-cyan-500 text-black text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative pt-32 pb-20 px-4 overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-blue-900/20 to-transparent"></div>
+        <div class="max-w-7xl mx-auto relative z-10 text-center">
+            <div class="inline-block mb-4 px-4 py-1 rounded-full bg-blue-500/20 border border-blue-500/50 text-cyan-400 text-sm font-semibold">
+                📍 A-586 11 B, North Karachi, 74700
+            </div>
+            <h1 class="text-5xl md:text-7xl font-bold font-display mb-6 neon-glow leading-tight">
+                Taste the <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600">Excellence</span>
+            </h1>
+            <p class="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
+                Premium Fast Food Restaurant serving the best Chinese, BBQ, Steaks, Burgers & More in North Karachi
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#menu" class="btn-primary px-8 py-4 rounded-full font-semibold text-lg flex items-center justify-center space-x-2">
+                    <i data-lucide="utensils" class="w-5 h-5"></i>
+                    <span>Order Now</span>
+                </a>
+                <button onclick="showContact()" class="px-8 py-4 rounded-full border border-blue-500/50 hover:bg-blue-500/20 transition-all font-semibold text-lg">
+                    Call for Delivery
+                </button>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 scroll-indicator">
+            <i data-lucide="chevron-down" class="w-8 h-8 text-cyan-400"></i>
+        </div>
+    </section>
+
+    <!-- Category Tabs -->
+    <section class="sticky top-20 z-40 bg-black/90 backdrop-blur-md border-y border-blue-500/20 py-4">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex overflow-x-auto space-x-2 pb-2 scrollbar-hide" id="category-tabs">
+                <button onclick="filterMenu('all')" class="tab-active px-6 py-2 rounded-full whitespace-nowrap font-semibold transition-all" data-category="all">All Items</button>
+                <button onclick="filterMenu('chinese')" class="tab-inactive px-6 py-2 rounded-full whitespace-nowrap font-semibold transition-all" data-category="chinese">Chinese</button>
+                <button onclick="filterMenu('pasta')" class="tab-inactive px-6 py-2 rounded-full whitespace-nowrap font-semibold transition-all" data-category="pasta">Pasta</button>
+                <button onclick="filterMenu('starters')" class="tab-inactive px-6 py-2 rounded-full whitespace-nowrap font-semibold transition-all" data-category="starters">Starters</button>
+                <button onclick="filterMenu('broast')" class="tab-inactive px-6 py-2 rounded-full whitespace-nowrap font-semibold transition-all" data-category="broast">Broast</button>
+                <button onclick="filterMenu('bbq')" class="tab-inactive px-6 py-2 rounded-full whitespace-nowrap font-semibold transition-all" data-category="bbq">BBQ</button>
+                <button onclick="filterMenu('steaks')" class="tab-inactive px-6 py-2 rounded-full whitespace-nowrap font-semibold transition-all" data-category="steaks">Steaks</button>
+                <button onclick="filterMenu('burgers')" class="tab-inactive px-6 py-2 rounded-full whitespace-nowrap font-semibold transition-all" data-category="burgers">Burgers</button>
+                <button onclick="filterMenu('rolls')" class="tab-inactive px-6 py-2 rounded-full whitespace-nowrap font-semibold transition-all" data-category="rolls">Rolls</button>
+                <button onclick="filterMenu('sandwiches')" class="tab-inactive px-6 py-2 rounded-full whitespace-nowrap font-semibold transition-all" data-category="sandwiches">Sandwiches</button>
+                <button onclick="filterMenu('drinks')" class="tab-inactive px-6 py-2 rounded-full whitespace-nowrap font-semibold transition-all" data-category="drinks">Drinks</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu" class="py-16 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="menu-grid">
+                <!-- Menu items will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="py-20 bg-gradient-to-b from-blue-900/20 to-transparent">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center p-8 rounded-2xl bg-blue-900/20 border border-blue-500/30 backdrop-blur-sm">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-full flex items-center justify-center">
+                        <i data-lucide="zap" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Fast Delivery</h3>
+                    <p class="text-gray-400">Quick delivery to your doorstep in North Karachi</p>
+                </div>
+                <div class="text-center p-8 rounded-2xl bg-blue-900/20 border border-blue-500/30 backdrop-blur-sm">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-full flex items-center justify-center">
+                        <i data-lucide="chef-hat" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Premium Quality</h3>
+                    <p class="text-gray-400">Best ingredients for the best taste</p>
+                </div>
+                <div class="text-center p-8 rounded-2xl bg-blue-900/20 border border-blue-500/30 backdrop-blur-sm">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-full flex items-center justify-center">
+                        <i data-lucide="clock" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Open Daily</h3>
+                    <p class="text-gray-400">Serving you fresh food every day</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="py-20 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="relative">
+                    <div class="absolute -inset-4 bg-gradient-to-r from-blue-600 to-cyan-400 rounded-2xl opacity-30 blur-xl"></div>
+                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80" alt="Restaurant" class="relative rounded-2xl shadow-2xl w-full">
+                </div>
+                <div>
+                    <h2 class="text-4xl md:text-5xl font-bold font-display mb-6 neon-glow">About Blue Bell Cafe</h2>
+                    <p class="text-gray-400 text-lg mb-6 leading-relaxed">
+                        Located in the heart of North Karachi, Blue Bell Cafe has been serving premium fast food since 2020. We specialize in Chinese cuisine, juicy BBQ, tender steaks, and mouth-watering burgers.
+                    </p>
+                    <p class="text-gray-400 text-lg mb-8 leading-relaxed">
+                        Our commitment to quality ingredients and exceptional taste has made us a favorite among food lovers in Karachi. Whether you're craving a quick snack or a hearty meal, we've got you covered.
+                    </p>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="p-4 rounded-xl bg-blue-900/30 border border-blue-500/30">
+                            <div class="text-3xl font-bold text-cyan-400">50+</div>
+                            <div class="text-sm text-gray-400">Menu Items</div>
+                        </div>
+                        <div class="p-4 rounded-xl bg-blue-900/30 border border-blue-500/30">
+                            <div class="text-3xl font-bold text-cyan-400">4.8★</div>
+                            <div class="text-sm text-gray-400">Customer Rating</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="py-20 px-4 bg-gradient-to-b from-transparent to-blue-900/20">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-4xl font-bold font-display mb-8 neon-glow">Visit Us</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div class="p-6 rounded-2xl bg-blue-900/20 border border-blue-500/30">
+                    <i data-lucide="map-pin" class="w-8 h-8 text-cyan-400 mx-auto mb-3"></i>
+                    <h3 class="font-semibold mb-2">Address</h3>
+                    <p class="text-gray-400 text-sm">A-586 11 B, North Karachi, Karachi, 74700</p>
+                </div>
+                <div class="p-6 rounded-2xl bg-blue-900/20 border border-blue-500/30">
+                    <i data-lucide="phone" class="w-8 h-8 text-cyan-400 mx-auto mb-3"></i>
+                    <h3 class="font-semibold mb-2">Phone</h3>
+                    <p class="text-gray-400 text-sm">+92 321 2223727</p>
+                </div>
+                <div class="p-6 rounded-2xl bg-blue-900/20 border border-blue-500/30">
+                    <i data-lucide="clock" class="w-8 h-8 text-cyan-400 mx-auto mb-3"></i>
+                    <h3 class="font-semibold mb-2">Hours</h3>
+                    <p class="text-gray-400 text-sm">12:00 PM - 12:00 AM</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black border-t border-blue-500/20 py-12 px-4">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="flex items-center justify-center space-x-3 mb-4">
+                <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-full flex items-center justify-center">
+                    <i data-lucide="bell" class="text-white w-5 h-5"></i>
+                </div>
+                <span class="text-2xl font-bold font-display">Blue Bell Cafe</span>
+            </div>
+            <p class="text-gray-500 mb-4">Premium Fast Food Restaurant - North Karachi</p>
+            <div class="flex justify-center space-x-6 text-gray-400">
+                <a href="#" class="hover:text-cyan-400 transition-colors"><i data-lucide="facebook" class="w-6 h-6"></i></a>
+                <a href="#" class="hover:text-cyan-400 transition-colors"><i data-lucide="instagram" class="w-6 h-6"></i></a>
+                <a href="#" class="hover:text-cyan-400 transition-colors"><i data-lucide="twitter" class="w-6 h-6"></i></a>
+            </div>
+            <p class="mt-8 text-gray-600 text-sm">© 2024 Blue Bell Cafe. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Cart Sidebar -->
+    <div id="cart-sidebar" class="cart-sidebar fixed inset-y-0 right-0 w-full md:w-96 bg-gray-900 border-l border-blue-500/30 shadow-2xl z-50 flex flex-col">
+        <div class="p-6 border-b border-blue-500/30 flex justify-between items-center bg-blue-900/20">
+            <h2 class="text-2xl font-bold font-display flex items-center space-x-2">
+                <i data-lucide="shopping-bag" class="w-6 h-6 text-cyan-400"></i>
+                <span>Your Order</span>
+            </h2>
+            <button onclick="toggleCart()" class="p-2 hover:bg-blue-500/20 rounded-full transition-colors">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+        </div>
+        
+        <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-4">
+            <p class="text-gray-400 text-center py-8">Your cart is empty</p>
+        </div>
+        
+        <div class="p-6 border-t border-blue-500/30 bg-blue-900/20">
+            <div class="flex justify-between mb-2 text-gray-400">
+                <span>Subtotal</span>
+                <span id="cart-subtotal">Rs. 0</span>
+            </div>
+            <div class="flex justify-between mb-4 text-gray-400">
+                <span>Delivery</span>
+                <span>Rs. 50</span>
+            </div>
+            <div class="flex justify-between mb-6 text-xl font-bold">
+                <span>Total</span>
+                <span id="cart-total" class="text-cyan-400">Rs. 0</span>
+            </div>
+            <button onclick="checkout()" class="w-full btn-primary py-4 rounded-full font-semibold text-lg flex items-center justify-center space-x-2">
+                <span>Place Order</span>
+                <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Cart Overlay -->
+    <div id="cart-overlay" onclick="toggleCart()" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 hidden opacity-0 transition-opacity"></div>
+
+    <!-- Notification -->
+    <div id="notification" class="fixed top-24 right-4 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-xl transform translate-x-full transition-transform z-50 flex items-center space-x-2">
+        <i data-lucide="check-circle" class="w-5 h-5"></i>
+        <span>Added to cart!</span>
+    </div>
+
+    <script>
+        // Menu Data
+        const menuData = [
+            // Chinese
+            { id: 1, name: "Chicken Shashlik", category: "chinese", price: 1200, description: "Tender chicken with bell peppers in tangy sauce" },
+            { id: 2, name: "Chicken Chilli Dry", category: "chinese", price: 1150, description: "Spicy dry chicken with green chilies" },
+            { id: 3, name: "Beef Chilli Dry", category: "chinese", price: 1300, description: "Spicy beef strips with vegetables" },
+            { id: 4, name: "Chicken Manchurian", category: "chinese", price: 1100, description: "Classic Manchurian balls in gravy" },
+            { id: 5, name: "Chicken Chilli Vegetable", category: "chinese", price: 1100, description: "Mixed vegetables with chicken" },
+            { id: 6, name: "Chicken Chowmein", category: "chinese", price: 800, description: "Stir-fried noodles with chicken" },
+            { id: 7, name: "Vegetable Chowmein", category: "chinese", price: 600, description: "Stir-fried noodles with vegetables" },
+            { id: 8, name: "Vegetable Fried Rice", category: "chinese", price: 450, description: "Classic fried rice with vegetables" },
+            { id: 9, name: "Chicken Fried Rice", category: "chinese", price: 550, description: "Fried rice with chicken pieces" },
+            { id: 10, name: "Garlic Fried Rice", category: "chinese", price: 550, description: "Aromatic garlic flavored rice" },
+            
+            // Pasta
+            { id: 11, name: "Alfredo Pasta", category: "pasta", price: 1100, description: "Creamy white sauce pasta (Penne/Fettuccine)" },
+            { id: 12, name: "Marinara Pasta", category: "pasta", price: 1000, description: "Tomato-based pasta (Penne/Fettuccine)" },
+            { id: 13, name: "Mushroom Pasta", category: "pasta", price: 1000, description: "Creamy mushroom pasta (Penne/Fettuccine)" },
+            
+            // Starters
+            { id: 14, name: "Regular Fries", category: "starters", price: 320, description: "Classic crispy french fries" },
+            { id: 15, name: "Masala Fries", category: "starters", price: 350, description: "Spiced fries with special masala" },
+            { id: 16, name: "Loaded Cheese Fries", category: "starters", price: 510, description: "Fries topped with melted cheese" },
+            { id: 17, name: "Fish & Chips", category: "starters", price: 1200, description: "Crispy fried fish with fries" },
+            { id: 18, name: "Chicken Strips", category: "starters", price: 750, description: "Crispy chicken strips (6 pcs)" },
+            { id: 19, name: "Chicken Nuggets (9 Pcs)", category: "starters", price: 600, description: "Golden fried chicken nuggets" },
+            { id: 20, name: "Mayo Garlic Fries", category: "starters", price: 420, description: "Fries with mayo garlic sauce" },
+            
+            // Broast
+            { id: 21, name: "Qtr. Broast (Leg)", category: "broast", price: 450, description: "Quarter broast chicken leg piece" },
+            { id: 22, name: "Qtr. Broast (Chest)", category: "broast", price: 500, description: "Quarter broast chicken chest" },
+            
+            // BBQ
+            { id: 23, name: "Chicken Tikka (Leg)", category: "bbq", price: 500, description: "Grilled spicy chicken leg" },
+            { id: 24, name: "Chicken Tikka (Chest)", category: "bbq", price: 550, description: "Grilled spicy chicken chest" },
+            { id: 25, name: "Malai Boti", category: "bbq", price: 700, description: "Creamy grilled chicken boti" },
+            { id: 26, name: "Reshmi Kabab", category: "bbq", price: 700, description: "Soft and juicy seekh kabab" },
+            { id: 27, name: "Beef Bihari Boti", category: "bbq", price: 800, description: "Traditional Bihari style boti" },
+            { id: 28, name: "Chicken Spicy Boti", category: "bbq", price: 700, description: "Spicy grilled chicken boti" },
+            
+            // Steaks
+            { id: 29, name: "Chicken Mushroom", category: "steaks", price: 1300, description: "Chicken steak with mushroom sauce" },
+            { id: 30, name: "Chicken Mexican", category: "steaks", price: 1250, description: "Mexican style spicy chicken steak" },
+            { id: 31, name: "Moroccan Chicken/Beef", category: "steaks", price: 1350, description: "Moroccan spiced steak" },
+            { id: 32, name: "Tarragon Chicken", category: "steaks", price: 1400, description: "French herb flavored chicken" },
+            { id: 33, name: "Beef Mexican Steak", category: "steaks", price: 1800, description: "Spicy Mexican beef steak" },
+            { id: 34, name: "Beef Mushroom Steak", category: "steaks", price: 1850, description: "Beef steak with creamy mushrooms" },
+            { id: 35, name: "BB Special Chicken/Beef Steak", category: "steaks", price: 1500, description: "House special steak (Chicken 1500/Beef 1700)" },
+            { id: 36, name: "BB Special Beef Steak", category: "steaks", price: 1900, description: "Premium special beef steak" },
+            
+            // Burgers
+            { id: 37, name: "Chicken Cheese Burger", category: "burgers", price: 500, description: "Grilled chicken with cheese" },
+            { id: 38, name: "Chicken Zinger Burger", category: "burgers", price: 520, description: "Crispy zinger fillet burger" },
+            { id: 39, name: "BB Chicken Burger", category: "burgers", price: 480, description: "Special Blue Bell chicken burger" },
+            { id: 40, name: "BB Beef Burger", category: "burgers", price: 600, description: "Juicy beef patty burger" },
+            { id: 41, name: "Beef Cheese Burger", category: "burgers", price: 600, description: "Beef burger with melted cheese" },
+            { id: 42, name: "Beef Jalapeno Burger", category: "burgers", price: 650, description: "Spicy jalapeno beef burger" },
+            { id: 43, name: "Chicken Zinger Cheese Burger", category: "burgers", price: 600, description: "Zinger with extra cheese" },
+            { id: 44, name: "BB Chicken Cheese Burger", category: "burgers", price: 560, description: "Special chicken cheese burger" },
+            { id: 45, name: "BB Beef Cheese Burger", category: "burgers", price: 680, description: "Special beef cheese burger" },
+            
+            // Rolls
+            { id: 46, name: "Chicken Chatni Roll", category: "rolls", price: 250, description: "Roll with special chatni" },
+            { id: 47, name: "Chicken Mayo Roll", category: "rolls", price: 260, description: "Creamy mayo chicken roll" },
+            { id: 48, name: "Chicken Cheese Roll", category: "rolls", price: 280, description: "Cheesy chicken roll" },
+            { id: 49, name: "Chicken Reshmi Kabab Roll", category: "rolls", price: 280, description: "Roll with reshmi kabab" },
+            { id: 50, name: "Chicken Malai Chatni Roll", category: "rolls", price: 280, description: "Malai boti with chatni roll" },
+            { id: 51, name: "Blue BB Zinger Roll", category: "rolls", price: 380, description: "Special zinger roll" },
+            { id: 52, name: "Beef Bihari Roll", category: "rolls", price: 350, description: "Bihari boti roll" },
+            
+            // Sandwiches
+            { id: 53, name: "Chicken Malai Boti Sandwich", category: "sandwiches", price: 500, description: "Grilled malai boti sandwich" },
+            { id: 54, name: "Club Sandwich", category: "sandwiches", price: 600, description: "Triple decker club sandwich" },
+            { id: 55, name: "Grilled Chicken Sandwich", category: "sandwiches", price: 780, description: "Healthy grilled chicken sandwich" },
+            { id: 56, name: "B.B.Q Sandwich", category: "sandwiches", price: 620, description: "BBQ chicken sandwich" },
+            
+            // Drinks
+            { id: 57, name: "Soft Drink 300ml", category: "drinks", price: 120, description: "Coca Cola / Sprite / Fanta" },
+            { id: 58, name: "Soft Drink 500ml", category: "drinks", price: 160, description: "Large soft drink" },
+            { id: 59, name: "Soft Drink Can", category: "drinks", price: 150, description: "Can drink" },
+            { id: 60, name: "Pakola", category: "drinks", price: 120, description: "Pakistani favorite green drink" },
+            { id: 61, name: "Water Small", category: "drinks", price: 60, description: "500ml mineral water" },
+            { id: 62, name: "Water Big", category: "drinks", price: 110, description: "1.5L mineral water" },
+            { id: 63, name: "Tea", category: "drinks", price: 200, description: "Traditional Pakistani tea" },
+            
+            // Extras
+            { id: 64, name: "Cheese Slice", category: "extras", price: 80, description: "Extra cheese slice" },
+            { id: 65, name: "Bun", category: "extras", price: 100, description: "Extra bun" },
+            { id: 66, name: "Dips", category: "extras", price: 60, description: "Extra sauce/dip" }
+        ];
+
+        let cart = [];
+        let currentFilter = 'all';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            renderMenu();
+            updateCartUI();
+        });
+
+        // Render Menu
+        function renderMenu() {
+            const grid = document.getElementById('menu-grid');
+            grid.innerHTML = '';
+            
+            const filteredItems = currentFilter === 'all' 
+                ? menuData 
+                : menuData.filter(item => item.category === currentFilter);
+            
+            filteredItems.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'menu-card rounded-2xl overflow-hidden';
+                card.innerHTML = `
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="flex-1">
+                                <h3 class="text-lg font-bold text-white mb-1">${item.name}</h3>
+                                <p class="text-gray-400 text-sm">${item.description}</p>
+                            </div>
+                            <div class="price-tag px-3 py-1 rounded-full text-white font-bold ml-4 whitespace-nowrap">
+                                Rs. ${item.price}
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between mt-4 pt-4 border-t border-blue-500/20">
+                            <span class="text-xs text-cyan-400 uppercase tracking-wider">${item.category}</span>
+                            <button onclick="addToCart(${item.id})" class="order-btn px-4 py-2 rounded-full text-black font-semibold text-sm flex items-center space-x-1">
+                                <i data-lucide="plus" class="w-4 h-4"></i>
+                                <span>Add</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            
+            lucide.createIcons();
+            
+            // Animate cards
+            gsap.from(".menu-card", {
+                y: 30,
+                opacity: 0,
+                duration: 0.5,
+                stagger: 0.05,
+                ease: "power3.out"
+            });
+        }
+
+        // Filter Menu
+        function filterMenu(category) {
+            currentFilter = category;
+            
+            // Update tabs
+            document.querySelectorAll('#category-tabs button').forEach(btn => {
+                if (btn.dataset.category === category) {
+                    btn.classList.remove('tab-inactive');
+                    btn.classList.add('tab-active');
+                } else {
+                    btn.classList.remove('tab-active');
+                    btn.classList.add('tab-inactive');
+                }
+            });
+            
+            renderMenu();
+        }
+
+        // Add to Cart
+        function addToCart(itemId) {
+            const item = menuData.find(i => i.id === itemId);
+            const existingItem = cart.find(i => i.id === itemId);
+            
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({ ...item, quantity: 1 });
+            }
+            
+            updateCartUI();
+            showNotification();
+        }
+
+        // Update Cart UI
+        function updateCartUI() {
+            const cartCount = document.getElementById('cart-count');
+            const cartItems = document.getElementById('cart-items');
+            const cartSubtotal = document.getElementById('cart-subtotal');
+            const cartTotal = document.getElementById('cart-total');
+            
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const total = subtotal + (cart.length > 0 ? 50 : 0);
+            
+            cartCount.textContent = totalItems;
+            cartSubtotal.textContent = `Rs. ${subtotal}`;
+            cartTotal.textContent = `Rs. ${total}`;
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p class="text-gray-400 text-center py-8">Your cart is empty</p>';
+            } else {
+                cartItems.innerHTML = cart.map(item => `
+                    <div class="bg-blue-900/30 rounded-xl p-4 border border-blue-500/20">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-semibold text-white">${item.name}</h4>
+                            <button onclick="removeFromCart(${item.id})" class="text-red-400 hover:text-red-300">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center space-x-2">
+                                <button onclick="updateQuantity(${item.id}, -1)" class="quantity-btn w-8 h-8 rounded-full flex items-center justify-center text-cyan-400">-</button>
+                                <span class="font-semibold w-8 text-center">${item.quantity}</span>
+                                <button onclick="updateQuantity(${item.id}, 1)" class="quantity-btn w-8 h-8 rounded-full flex items-center justify-center text-cyan-400">+</button>
+                            </div>
+                            <span class="text-cyan-400 font-bold">Rs. ${item.price * item.quantity}</span>
+                        </div>
+                    </div>
+                `).join('');
+                lucide.createIcons();
+            }
+        }
+
+        // Update Quantity
+        function updateQuantity(itemId, change) {
+            const item = cart.find(i => i.id === itemId);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    removeFromCart(itemId);
+                } else {
+                    updateCartUI();
+                }
+            }
+        }
+
+        // Remove from Cart
+        function removeFromCart(itemId) {
+            cart = cart.filter(i => i.id !== itemId);
+            updateCartUI();
+        }
+
+        // Toggle Cart
+        function toggleCart() {
+            const sidebar = document.getElementById('cart-sidebar');
+            const overlay = document.getElementById('cart-overlay');
+            
+            if (sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+                overlay.classList.add('hidden');
+                setTimeout(() => overlay.classList.remove('opacity-100'), 0);
+            } else {
+                sidebar.classList.add('open');
+                overlay.classList.remove('hidden');
+                setTimeout(() => overlay.classList.add('opacity-100'), 10);
+            }
+        }
+
+        // Show Notification
+        function showNotification() {
+            const notification = document.getElementById('notification');
+            notification.classList.remove('translate-x-full');
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+            }, 2000);
+        }
+
+        // Checkout
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+            
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0) + 50;
+            const orderDetails = cart.map(item => `${item.name} x${item.quantity}`).join(', ');
+            
+            const message = `New Order from Blue Bell Cafe Website!\n\nItems: ${orderDetails}\nTotal: Rs. ${total}\n\nPlease confirm your order.`;
+            
+            // WhatsApp integration
+            const whatsappUrl = `https://wa.me/923212223727?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+            
+            // Clear cart
+            cart = [];
+            updateCartUI();
+            toggleCart();
+        }
+
+        // Show Contact
+        function showContact() {
+            document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Scroll Animation
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-lg');
+            } else {
+                navbar.classList.remove('shadow-lg');
+            }
+        });
+    </script>
+</body>
+</html>
