@@ -6,6 +6,8 @@
     <title>Blue Bell Cafe - Premium Fast Food | Karachi</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -33,19 +35,6 @@
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-        }
-        
-        .menu-card h3 {
-            color: white;
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-        
-        .menu-card p {
-            color: #e0e0e0;
-            font-size: 0.9rem;
-            margin-bottom: 12px;
         }
         
         .price-tag {
@@ -84,10 +73,6 @@
             font-weight: bold;
         }
         
-        .add-btn:hover {
-            background: white;
-        }
-        
         .cart-box {
             position: fixed;
             right: 20px;
@@ -110,11 +95,6 @@
             object-fit: cover;
             border-radius: 12px;
             border: 2px solid #00d4ff;
-            transition: transform 0.3s;
-        }
-        
-        .gallery-img:hover {
-            transform: scale(1.05);
         }
         
         .hero-img {
@@ -124,7 +104,126 @@
             object-fit: cover;
             border-radius: 20px;
             border: 3px solid #00d4ff;
-            box-shadow: 0 10px 40px rgba(0, 212, 255, 0.3);
+        }
+        
+        .table-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .table-btn {
+            aspect-ratio: 1;
+            border: 2px solid #00d4ff;
+            background: rgba(0, 102, 204, 0.3);
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .table-btn.selected {
+            background: #00ff88;
+            color: black;
+        }
+        
+        .table-btn.booked {
+            background: #ff4444;
+            cursor: not-allowed;
+        }
+        
+        .receipt {
+            background: white;
+            color: black;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .booking-id {
+            background: #00d4ff;
+            color: black;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 15px 0;
+            letter-spacing: 2px;
+        }
+        
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #001a33 0%, #000814 100%);
+            border: 2px solid #00d4ff;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .time-slot {
+            background: rgba(0, 102, 204, 0.3);
+            border: 1px solid #00d4ff;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+        }
+        
+        .time-slot.selected {
+            background: #00d4ff;
+            color: black;
+        }
+        
+        /* Admin Panel Styles */
+        .admin-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .status-pending { background: #fbbf24; color: black; }
+        .status-checked { background: #10b981; color: white; }
+        .status-cancelled { background: #ef4444; color: white; }
+        
+        .scanner-container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        #reader {
+            border: 2px solid #00d4ff !important;
+            border-radius: 12px;
+            overflow: hidden;
         }
     </style>
 </head>
@@ -137,47 +236,56 @@
                 <h1 class="text-3xl font-bold text-white">🔔 Blue Bell Cafe</h1>
                 <p class="text-cyan-400 text-sm">A-586 11 B, North Karachi | 0321-2223727</p>
             </div>
-            <button onclick="toggleCart()" class="bg-blue-600 px-4 py-2 rounded-full text-white">
-                Cart (<span id="cart-count">0</span>)
-            </button>
+            <div class="flex gap-3">
+                <button onclick="openAdmin()" class="bg-purple-600 px-4 py-2 rounded-full text-white font-semibold hover:bg-purple-500 transition">
+                    🔐 Staff Login
+                </button>
+                <button onclick="openReservation()" class="bg-green-600 px-4 py-2 rounded-full text-white font-semibold hover:bg-green-500 transition">
+                    Book Table
+                </button>
+                <button onclick="toggleCart()" class="bg-blue-600 px-4 py-2 rounded-full text-white">
+                    Cart (<span id="cart-count">0</span>)
+                </button>
+            </div>
         </div>
     </header>
 
-    <!-- Hero with Photo -->
+    <!-- Hero Section -->
     <section class="pt-32 pb-10 px-4 text-center">
         <h2 class="text-5xl font-bold mb-4 text-white">Premium Fast Food</h2>
         <p class="text-xl text-gray-300 mb-8">Best Chinese, BBQ, Steaks & Burgers in Town</p>
         
-        <!-- Main Cafe Photo -->
-        <img src="Screenshot 2026-02-08 140953.png" alt="Blue Bell Cafe Interior" class="hero-img mx-auto mb-8">
+        <img src="Screenshot 2026-02-08 140953.png" alt="Blue Bell Cafe" class="hero-img mx-auto mb-8">
         
-        <p class="text-cyan-400 text-lg">Experience the perfect ambiance with delicious food</p>
+        <div class="flex gap-4 justify-center flex-wrap">
+            <button onclick="openReservation()" class="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-4 rounded-full font-bold text-lg">
+                📅 Reserve Table Now
+            </button>
+            <button onclick="document.getElementById('menu').scrollIntoView({behavior: 'smooth'})" class="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-8 py-4 rounded-full font-bold text-lg">
+                🍔 Order Food
+            </button>
+        </div>
     </section>
 
-    <!-- Photo Gallery -->
+    <!-- Gallery -->
     <section class="px-4 py-10 bg-black/30">
         <div class="max-w-7xl mx-auto">
             <h3 class="text-3xl font-bold text-center mb-8 text-cyan-400">Our Beautiful Space</h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Photo 1: Open Air Seating -->
-                <div class="relative group">
-                    <img src="Screenshot 2026-02-08 141006.png" alt="Open Air Seating" class="gallery-img">
+                <div class="relative">
+                    <img src="Screenshot 2026-02-08 141006.png" alt="Dining" class="gallery-img">
                     <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 rounded-b-12">
                         <p class="text-white font-semibold">Elegant Dining Area</p>
                     </div>
                 </div>
-                
-                <!-- Photo 2: Dining Area -->
-                <div class="relative group">
-                    <img src="Screenshot 2026-02-08 141017.png" alt="Dining Area" class="gallery-img">
+                <div class="relative">
+                    <img src="Screenshot 2026-02-08 141017.png" alt="VIP" class="gallery-img">
                     <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 rounded-b-12">
                         <p class="text-white font-semibold">VIP Lounge</p>
                     </div>
                 </div>
-                
-                <!-- Photo 3: VIP Lounge -->
-                <div class="relative group">
-                    <img src="Screenshot 2026-02-08 140953.png" alt="VIP Lounge" class="gallery-img">
+                <div class="relative">
+                    <img src="Screenshot 2026-02-08 140953.png" alt="Open Air" class="gallery-img">
                     <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 rounded-b-12">
                         <p class="text-white font-semibold">Open Air Seating</p>
                     </div>
@@ -186,9 +294,9 @@
         </div>
     </section>
 
-    <!-- Categories -->
-    <section class="px-4 mb-8 sticky top-20 bg-black/80 py-4 z-40">
-        <div class="max-w-7xl mx-auto flex flex-wrap justify-center" id="category-buttons">
+    <!-- Menu Section -->
+    <section id="menu" class="px-4 mb-8 sticky top-20 bg-black/80 py-4 z-40">
+        <div class="max-w-7xl mx-auto flex flex-wrap justify-center">
             <button class="category-btn active" onclick="showCategory('all')">All</button>
             <button class="category-btn" onclick="showCategory('chinese')">Chinese</button>
             <button class="category-btn" onclick="showCategory('pasta')">Pasta</button>
@@ -206,7 +314,6 @@
     <!-- Menu Grid -->
     <section class="px-4 pb-20">
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="menu-container">
-            <!-- Items will load here -->
         </div>
     </section>
 
@@ -220,18 +327,229 @@
         </div>
     </div>
 
+    <!-- Reservation Modal -->
+    <div id="reservation-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-cyan-400">Book Your Table</h2>
+                <button onclick="closeReservation()" class="text-gray-400 hover:text-white text-2xl">×</button>
+            </div>
+
+            <div id="step1">
+                <div class="mb-4">
+                    <label class="block text-sm mb-2">Your Name</label>
+                    <input type="text" id="res-name" class="w-full p-3 rounded bg-blue-900/50 border border-blue-500 text-white" placeholder="Enter your name">
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm mb-2">Phone Number</label>
+                    <input type="tel" id="res-phone" class="w-full p-3 rounded bg-blue-900/50 border border-blue-500 text-white" placeholder="03XX-XXXXXXX">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm mb-2">Date</label>
+                        <input type="date" id="res-date" class="w-full p-3 rounded bg-blue-900/50 border border-blue-500 text-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm mb-2">People</label>
+                        <select id="res-people" class="w-full p-3 rounded bg-blue-900/50 border border-blue-500 text-white">
+                            <option value="2">2 People</option>
+                            <option value="4">4 People</option>
+                            <option value="6">6 People</option>
+                            <option value="8">8 People</option>
+                            <option value="10">10+ People</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm mb-2">Select Time</label>
+                    <div class="grid grid-cols-3 gap-2" id="time-slots">
+                        <div class="time-slot" onclick="selectTime(this, '12:00 PM')">12:00 PM</div>
+                        <div class="time-slot" onclick="selectTime(this, '1:00 PM')">1:00 PM</div>
+                        <div class="time-slot" onclick="selectTime(this, '2:00 PM')">2:00 PM</div>
+                        <div class="time-slot" onclick="selectTime(this, '6:00 PM')">6:00 PM</div>
+                        <div class="time-slot" onclick="selectTime(this, '7:00 PM')">7:00 PM</div>
+                        <div class="time-slot" onclick="selectTime(this, '8:00 PM')">8:00 PM</div>
+                        <div class="time-slot" onclick="selectTime(this, '9:00 PM')">9:00 PM</div>
+                        <div class="time-slot" onclick="selectTime(this, '10:00 PM')">10:00 PM</div>
+                        <div class="time-slot" onclick="selectTime(this, '11:00 PM')">11:00 PM</div>
+                    </div>
+                </div>
+
+                <button onclick="goToStep2()" class="w-full bg-cyan-400 text-black py-3 rounded-lg font-bold">Next: Select Table</button>
+            </div>
+
+            <div id="step2" class="hidden">
+                <p class="text-center mb-4 text-gray-300">Click on available table (Green = Available)</p>
+                <div class="table-grid mb-6" id="table-grid"></div>
+                <div class="flex gap-3">
+                    <button onclick="backToStep1()" class="flex-1 bg-gray-600 text-white py-3 rounded-lg font-bold">Back</button>
+                    <button onclick="confirmReservation()" class="flex-1 bg-green-500 text-black py-3 rounded-lg font-bold">Confirm Booking</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Receipt Modal -->
+    <div id="receipt-modal" class="modal hidden">
+        <div class="modal-content" style="max-width: 450px;">
+            <div class="receipt" id="receipt-content">
+                <div class="text-center border-b-2 border-dashed border-gray-400 pb-4 mb-4">
+                    <h2 class="text-2xl font-bold">BLUE BELL CAFE</h2>
+                    <p class="text-sm">A-586 11 B, North Karachi</p>
+                    <p class="text-sm">Tel: 0321-2223727</p>
+                </div>
+                
+                <div class="text-center mb-4">
+                    <p class="text-sm text-gray-600 font-bold">BOOKING CONFIRMATION</p>
+                    <div class="booking-id" id="booking-id">BB-78452</div>
+                </div>
+
+                <div class="space-y-2 text-sm mb-4">
+                    <div class="flex justify-between border-b border-gray-200 pb-1">
+                        <span><strong>Name:</strong></span>
+                        <span id="receipt-name">John Doe</span>
+                    </div>
+                    <div class="flex justify-between border-b border-gray-200 pb-1">
+                        <span><strong>Phone:</strong></span>
+                        <span id="receipt-phone">03XX-XXXXXXX</span>
+                    </div>
+                    <div class="flex justify-between border-b border-gray-200 pb-1">
+                        <span><strong>Date:</strong></span>
+                        <span id="receipt-date">2024-01-15</span>
+                    </div>
+                    <div class="flex justify-between border-b border-gray-200 pb-1">
+                        <span><strong>Time:</strong></span>
+                        <span id="receipt-time">7:00 PM</span>
+                    </div>
+                    <div class="flex justify-between border-b border-gray-200 pb-1">
+                        <span><strong>People:</strong></span>
+                        <span id="receipt-people">4 People</span>
+                    </div>
+                    <div class="flex justify-between border-b border-gray-200 pb-1">
+                        <span><strong>Table:</strong></span>
+                        <span id="receipt-table">Table 5</span>
+                    </div>
+                </div>
+
+                <div id="qrcode" class="flex justify-center"></div>
+                
+                <p class="text-xs text-center text-gray-600 mt-4">
+                    <strong>Show this receipt at entrance</strong><br>
+                    Valid for 15 minutes after reservation time<br>
+                    Staff will scan QR code to verify
+                </p>
+            </div>
+
+            <button onclick="downloadReceipt()" class="w-full mt-4 bg-green-500 text-black py-3 rounded-lg font-bold">📥 Download Receipt</button>
+            <button onclick="closeReceipt()" class="w-full mt-3 bg-gray-600 text-white py-3 rounded-lg font-bold">Close</button>
+        </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div id="admin-login-modal" class="modal hidden">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-purple-400">🔐 Staff Login</h2>
+                <button onclick="closeAdminLogin()" class="text-gray-400 hover:text-white text-2xl">×</button>
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-sm mb-2">Username</label>
+                <input type="text" id="admin-user" class="w-full p-3 rounded bg-blue-900/50 border border-blue-500 text-white" placeholder="Enter username">
+            </div>
+            
+            <div class="mb-6">
+                <label class="block text-sm mb-2">Password</label>
+                <input type="password" id="admin-pass" class="w-full p-3 rounded bg-blue-900/50 border border-blue-500 text-white" placeholder="Enter password">
+            </div>
+            
+            <button onclick="loginAdmin()" class="w-full bg-purple-600 text-white py-3 rounded-lg font-bold hover:bg-purple-500">Login</button>
+            
+            <p class="text-center mt-4 text-gray-400 text-sm">
+                Default: username: <strong>admin</strong> | password: <strong>bluebell123</strong>
+            </p>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard Modal -->
+    <div id="admin-dashboard" class="modal hidden">
+        <div class="modal-content" style="max-width: 900px; width: 95%;">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-purple-400">👨‍💼 Staff Dashboard</h2>
+                <div class="flex gap-3">
+                    <button onclick="openScanner()" class="bg-green-600 px-4 py-2 rounded-lg text-white font-bold text-sm">📷 Scan QR</button>
+                    <button onclick="logoutAdmin()" class="bg-red-600 px-4 py-2 rounded-lg text-white font-bold text-sm">Logout</button>
+                    <button onclick="closeAdminDashboard()" class="text-gray-400 hover:text-white text-2xl">×</button>
+                </div>
+            </div>
+
+            <!-- Search -->
+            <div class="mb-6 flex gap-3">
+                <input type="text" id="search-booking" class="flex-1 p-3 rounded bg-blue-900/50 border border-blue-500 text-white" placeholder="Search by Booking ID or Phone..." onkeyup="searchBookings()">
+                <button onclick="refreshBookings()" class="bg-blue-600 px-6 py-3 rounded-lg text-white font-bold">🔄 Refresh</button>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-3 gap-4 mb-6">
+                <div class="admin-card text-center">
+                    <div class="text-3xl font-bold text-yellow-400" id="stat-pending">0</div>
+                    <div class="text-sm text-gray-400">Pending</div>
+                </div>
+                <div class="admin-card text-center">
+                    <div class="text-3xl font-bold text-green-400" id="stat-checked">0</div>
+                    <div class="text-sm text-gray-400">Checked In</div>
+                </div>
+                <div class="admin-card text-center">
+                    <div class="text-3xl font-bold text-cyan-400" id="stat-total">0</div>
+                    <div class="text-sm text-gray-400">Total Today</div>
+                </div>
+            </div>
+
+            <!-- Bookings List -->
+            <div class="max-h-96 overflow-y-auto" id="bookings-list">
+                <!-- Bookings will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- QR Scanner Modal -->
+    <div id="scanner-modal" class="modal hidden">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-green-400">📷 Scan Booking QR Code</h2>
+                <button onclick="closeScanner()" class="text-gray-400 hover:text-white text-2xl">×</button>
+            </div>
+            
+            <div class="scanner-container">
+                <div id="reader"></div>
+            </div>
+            
+            <p class="text-center text-gray-400 mt-4">Point camera at customer's QR code</p>
+            
+            <div id="scan-result" class="mt-4 hidden">
+                <div class="bg-green-900/50 border border-green-500 rounded-lg p-4 text-center">
+                    <p class="text-green-400 font-bold text-lg">✅ Booking Verified!</p>
+                    <p id="scan-details" class="text-white mt-2"></p>
+                    <button onclick="markCheckedIn()" class="mt-3 bg-green-500 text-black px-6 py-2 rounded-lg font-bold">Mark as Checked In</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="bg-black/80 border-t border-blue-500/30 py-10 px-4 text-center">
         <h3 class="text-2xl font-bold mb-4">🔔 Blue Bell Cafe</h3>
-        <p class="text-gray-400 mb-2">X3C5+VWG, Plot A 586, Sector 11-B Sector 11 B North Karachi, Karachi, Pakistan</p>
+        <p class="text-gray-400 mb-2">A-586 11 B, North Karachi, Karachi 74700</p>
         <p class="text-cyan-400 text-xl mb-4">📞 0321-2223727</p>
         <p class="text-gray-500 text-sm">Open Daily: 12:00 PM - 12:00 AM</p>
     </footer>
 
     <script>
-        // Complete Menu Data
+        // Data
         const menuItems = [
-            // Chinese
             {name: "Chicken Shashlik", category: "chinese", price: 1200, desc: "Tender chicken with bell peppers"},
             {name: "Chicken Chilli Dry", category: "chinese", price: 1150, desc: "Spicy dry chicken with green chilies"},
             {name: "Beef Chilli Dry", category: "chinese", price: 1300, desc: "Spicy beef strips"},
@@ -242,13 +560,9 @@
             {name: "Vegetable Fried Rice", category: "chinese", price: 450, desc: "Veg fried rice"},
             {name: "Chicken Fried Rice", category: "chinese", price: 550, desc: "Chicken fried rice"},
             {name: "Garlic Fried Rice", category: "chinese", price: 550, desc: "Garlic flavored rice"},
-            
-            // Pasta
             {name: "Alfredo Pasta", category: "pasta", price: 1100, desc: "Creamy white sauce"},
             {name: "Marinara Pasta", category: "pasta", price: 1000, desc: "Tomato sauce pasta"},
             {name: "Mushroom Pasta", category: "pasta", price: 1000, desc: "Creamy mushroom"},
-            
-            // Starters
             {name: "Regular Fries", category: "starters", price: 320, desc: "Classic fries"},
             {name: "Masala Fries", category: "starters", price: 350, desc: "Spiced fries"},
             {name: "Loaded Cheese Fries", category: "starters", price: 510, desc: "Cheese topped fries"},
@@ -256,20 +570,14 @@
             {name: "Chicken Strips", category: "starters", price: 750, desc: "6 crispy strips"},
             {name: "Chicken Nuggets (9)", category: "starters", price: 600, desc: "Golden nuggets"},
             {name: "Mayo Garlic Fries", category: "starters", price: 420, desc: "Fries with mayo garlic"},
-            
-            // Broast
             {name: "Qtr. Broast (Leg)", category: "broast", price: 450, desc: "Quarter chicken leg"},
             {name: "Qtr. Broast (Chest)", category: "broast", price: 500, desc: "Quarter chicken chest"},
-            
-            // BBQ
             {name: "Chicken Tikka (Leg)", category: "bbq", price: 500, desc: "Grilled spicy leg"},
             {name: "Chicken Tikka (Chest)", category: "bbq", price: 550, desc: "Grilled spicy chest"},
             {name: "Malai Boti", category: "bbq", price: 700, desc: "Creamy grilled boti"},
             {name: "Reshmi Kabab", category: "bbq", price: 700, desc: "Soft seekh kabab"},
             {name: "Beef Bihari Boti", category: "bbq", price: 800, desc: "Traditional Bihari"},
             {name: "Chicken Spicy Boti", category: "bbq", price: 700, desc: "Spicy grilled boti"},
-            
-            // Steaks
             {name: "Chicken Mushroom", category: "steaks", price: 1300, desc: "With mushroom sauce"},
             {name: "Chicken Mexican", category: "steaks", price: 1250, desc: "Mexican style"},
             {name: "Moroccan Chicken", category: "steaks", price: 1350, desc: "Moroccan spiced"},
@@ -278,8 +586,6 @@
             {name: "Beef Mushroom Steak", category: "steaks", price: 1850, desc: "Beef with mushrooms"},
             {name: "BB Special Chicken Steak", category: "steaks", price: 1500, desc: "House special"},
             {name: "BB Special Beef Steak", category: "steaks", price: 1900, desc: "Premium beef"},
-            
-            // Burgers
             {name: "Chicken Cheese Burger", category: "burgers", price: 500, desc: "Grilled with cheese"},
             {name: "Chicken Zinger Burger", category: "burgers", price: 520, desc: "Crispy zinger"},
             {name: "BB Chicken Burger", category: "burgers", price: 480, desc: "Special recipe"},
@@ -289,8 +595,6 @@
             {name: "Chicken Zinger Cheese", category: "burgers", price: 600, desc: "Zinger with cheese"},
             {name: "BB Chicken Cheese", category: "burgers", price: 560, desc: "Special with cheese"},
             {name: "BB Beef Cheese", category: "burgers", price: 680, desc: "Special beef cheese"},
-            
-            // Rolls
             {name: "Chicken Chatni Roll", category: "rolls", price: 250, desc: "With special chatni"},
             {name: "Chicken Mayo Roll", category: "rolls", price: 260, desc: "Creamy mayo"},
             {name: "Chicken Cheese Roll", category: "rolls", price: 280, desc: "Cheesy roll"},
@@ -298,14 +602,10 @@
             {name: "Chicken Malai Chatni Roll", category: "rolls", price: 280, desc: "Malai with chatni"},
             {name: "Blue BB Zinger Roll", category: "rolls", price: 380, desc: "Special zinger"},
             {name: "Beef Bihari Roll", category: "rolls", price: 350, desc: "Bihari boti roll"},
-            
-            // Sandwiches
             {name: "Chicken Malai Boti Sandwich", category: "sandwiches", price: 500, desc: "Grilled sandwich"},
             {name: "Club Sandwich", category: "sandwiches", price: 600, desc: "Triple decker"},
             {name: "Grilled Chicken Sandwich", category: "sandwiches", price: 780, desc: "Healthy grilled"},
             {name: "B.B.Q Sandwich", category: "sandwiches", price: 620, desc: "BBQ chicken"},
-            
-            // Drinks
             {name: "Soft Drink 300ml", category: "drinks", price: 120, desc: "Coke/Sprite/Fanta"},
             {name: "Soft Drink 500ml", category: "drinks", price: 160, desc: "Large soft drink"},
             {name: "Soft Drink Can", category: "drinks", price: 150, desc: "Can drink"},
@@ -317,8 +617,13 @@
 
         let cart = [];
         let currentCategory = 'all';
+        let reservationData = {};
+        let selectedTable = null;
+        let bookings = JSON.parse(localStorage.getItem('bluebell_bookings')) || [];
+        let currentScanBooking = null;
+        let html5QrCode = null;
 
-        // Load all items on start
+        // Menu Functions
         function loadItems() {
             const container = document.getElementById('menu-container');
             container.innerHTML = '';
@@ -331,41 +636,30 @@
                 const card = document.createElement('div');
                 card.className = 'menu-card';
                 card.innerHTML = `
-                    <h3>${item.name}</h3>
-                    <p>${item.desc}</p>
+                    <h3 class="text-xl font-bold mb-2">${item.name}</h3>
+                    <p class="text-gray-300 mb-3">${item.desc}</p>
                     <div class="price-tag">Rs. ${item.price}</div>
                     <br>
-                    <button class="add-btn" onclick="addToCart('${item.name}', ${item.price})">+ Add to Cart</button>
+                    <button class="add-btn mt-2" onclick="addToCart('${item.name}', ${item.price})">+ Add to Cart</button>
                 `;
                 container.appendChild(card);
             });
         }
 
-        // Show category
         function showCategory(category) {
             currentCategory = category;
-            
-            // Update buttons
-            document.querySelectorAll('.category-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
+            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-            
             loadItems();
         }
 
-        // Add to cart
         function addToCart(name, price) {
             const existing = cart.find(item => item.name === name);
-            if (existing) {
-                existing.quantity++;
-            } else {
-                cart.push({name, price, quantity: 1});
-            }
+            if (existing) existing.quantity++;
+            else cart.push({name, price, quantity: 1});
             updateCart();
         }
 
-        // Update cart display
         function updateCart() {
             const count = cart.reduce((sum, item) => sum + item.quantity, 0);
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -375,53 +669,348 @@
             
             const cartItems = document.getElementById('cart-items');
             if (cart.length === 0) {
-                cartItems.innerHTML = '<p class="text-gray-400">Cart is empty</p>';
+                cartItems.innerHTML = '<p class="text-gray-400 text-center py-4">Cart is empty</p>';
             } else {
                 cartItems.innerHTML = cart.map(item => `
-                    <div class="flex justify-between items-center mb-2 p-2 bg-blue-900/50 rounded">
+                    <div class="flex justify-between items-center mb-3 p-2 bg-blue-900/30 rounded">
                         <div>
-                            <p class="font-semibold">${item.name}</p>
-                            <p class="text-sm text-gray-400">Rs. ${item.price} x ${item.quantity}</p>
+                            <p class="font-semibold text-sm">${item.name}</p>
+                            <p class="text-xs text-gray-400">Rs. ${item.price} x ${item.quantity}</p>
                         </div>
-                        <button onclick="removeFromCart('${item.name}')" class="text-red-400">✕</button>
+                        <button onclick="removeFromCart('${item.name}')" class="text-red-400 hover:text-red-300">✕</button>
                     </div>
                 `).join('');
             }
         }
 
-        // Remove from cart
         function removeFromCart(name) {
             cart = cart.filter(item => item.name !== name);
             updateCart();
         }
 
-        // Toggle cart sidebar
         function toggleCart() {
-            const sidebar = document.getElementById('cart-sidebar');
-            sidebar.classList.toggle('hidden');
+            document.getElementById('cart-sidebar').classList.toggle('hidden');
         }
 
-        // Checkout
         function checkout() {
-            if (cart.length === 0) {
-                alert('Cart is empty!');
-                return;
-            }
+            if (cart.length === 0) return alert('Cart is empty!');
             
-            let message = 'New Order from Blue Bell Cafe Website:\n\n';
+            let message = 'New Order from Blue Bell Cafe:\n\n';
             let total = 0;
-            
             cart.forEach(item => {
                 message += `${item.name} x${item.quantity} = Rs. ${item.price * item.quantity}\n`;
                 total += item.price * item.quantity;
             });
-            
             message += `\nTotal: Rs. ${total}`;
             
             window.open(`https://wa.me/923212223727?text=${encodeURIComponent(message)}`, '_blank');
         }
 
-        // Load on start
+        // Reservation Functions
+        function openReservation() {
+            document.getElementById('reservation-modal').classList.remove('hidden');
+            document.getElementById('step1').classList.remove('hidden');
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('res-date').value = new Date().toISOString().split('T')[0];
+        }
+
+        function closeReservation() {
+            document.getElementById('reservation-modal').classList.add('hidden');
+        }
+
+        function selectTime(el, time) {
+            document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+            el.classList.add('selected');
+            reservationData.time = time;
+        }
+
+        function goToStep2() {
+            const name = document.getElementById('res-name').value;
+            const phone = document.getElementById('res-phone').value;
+            const date = document.getElementById('res-date').value;
+            const people = document.getElementById('res-people').value;
+            
+            if (!name || !phone || !date || !reservationData.time) {
+                return alert('Please fill all fields and select time!');
+            }
+            
+            reservationData = {...reservationData, name, phone, date, people};
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+            generateTables();
+        }
+
+        function backToStep1() {
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step1').classList.remove('hidden');
+        }
+
+        function generateTables() {
+            const grid = document.getElementById('table-grid');
+            grid.innerHTML = '';
+            
+            // Get booked tables for selected date/time
+            const bookedTables = bookings
+                .filter(b => b.date === reservationData.date && b.time === reservationData.time && b.status !== 'cancelled')
+                .map(b => b.table);
+            
+            for (let i = 1; i <= 16; i++) {
+                const btn = document.createElement('button');
+                const isBooked = bookedTables.includes(i);
+                btn.className = `table-btn ${isBooked ? 'booked' : ''}`;
+                btn.innerHTML = `<span class="text-2xl">${isBooked ? '🔴' : '🟢'}</span><span class="text-xs mt-1">T-${i}</span>`;
+                
+                if (!isBooked) {
+                    btn.onclick = () => {
+                        document.querySelectorAll('.table-btn').forEach(b => {
+                            if (!b.classList.contains('booked')) b.classList.remove('selected');
+                        });
+                        btn.classList.add('selected');
+                        selectedTable = i;
+                    };
+                }
+                grid.appendChild(btn);
+            }
+        }
+
+        function confirmReservation() {
+            if (!selectedTable) return alert('Please select a table!');
+            
+            const booking = {
+                id: 'BB-' + Math.floor(10000 + Math.random() * 90000),
+                ...reservationData,
+                table: selectedTable,
+                status: 'pending',
+                createdAt: new Date().toISOString()
+            };
+            
+            bookings.push(booking);
+            localStorage.setItem('bluebell_bookings', JSON.stringify(bookings));
+            
+            // Show receipt
+            showReceipt(booking);
+            closeReservation();
+            
+            // WhatsApp notification
+            const msg = `New Reservation!\n\nID: ${booking.id}\nName: ${booking.name}\nPhone: ${booking.phone}\nDate: ${booking.date}\nTime: ${booking.time}\nTable: ${booking.table}\nPeople: ${booking.people}`;
+            window.open(`https://wa.me/923212223727?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function showReceipt(booking) {
+            document.getElementById('receipt-modal').classList.remove('hidden');
+            document.getElementById('booking-id').textContent = booking.id;
+            document.getElementById('receipt-name').textContent = booking.name;
+            document.getElementById('receipt-phone').textContent = booking.phone;
+            document.getElementById('receipt-date').textContent = booking.date;
+            document.getElementById('receipt-time').textContent = booking.time;
+            document.getElementById('receipt-people').textContent = booking.people + ' People';
+            document.getElementById('receipt-table').textContent = 'Table ' + booking.table;
+            
+            document.getElementById('qrcode').innerHTML = '';
+            new QRCode(document.getElementById('qrcode'), {
+                text: booking.id,
+                width: 128,
+                height: 128
+            });
+        }
+
+        function closeReceipt() {
+            document.getElementById('receipt-modal').classList.add('hidden');
+        }
+
+        function downloadReceipt() {
+            alert('Screenshot le lo ya print kar lo! Download feature yahan nahi chal raha.');
+        }
+
+        // Admin Functions
+        function openAdmin() {
+            document.getElementById('admin-login-modal').classList.remove('hidden');
+        }
+
+        function closeAdminLogin() {
+            document.getElementById('admin-login-modal').classList.add('hidden');
+        }
+
+        function loginAdmin() {
+            const user = document.getElementById('admin-user').value;
+            const pass = document.getElementById('admin-pass').value;
+            
+            if (user === 'admin' && pass === 'bluebell123') {
+                closeAdminLogin();
+                openAdminDashboard();
+            } else {
+                alert('Wrong username or password!');
+            }
+        }
+
+        function openAdminDashboard() {
+            document.getElementById('admin-dashboard').classList.remove('hidden');
+            loadBookings();
+        }
+
+        function closeAdminDashboard() {
+            document.getElementById('admin-dashboard').classList.add('hidden');
+        }
+
+        function logoutAdmin() {
+            closeAdminDashboard();
+        }
+
+        function loadBookings() {
+            const list = document.getElementById('bookings-list');
+            const today = new Date().toISOString().split('T')[0];
+            const todayBookings = bookings.filter(b => b.date === today);
+            
+            // Update stats
+            document.getElementById('stat-pending').textContent = todayBookings.filter(b => b.status === 'pending').length;
+            document.getElementById('stat-checked').textContent = todayBookings.filter(b => b.status === 'checked').length;
+            document.getElementById('stat-total').textContent = todayBookings.length;
+            
+            if (todayBookings.length === 0) {
+                list.innerHTML = '<p class="text-center text-gray-400 py-8">No bookings for today</p>';
+                return;
+            }
+            
+            list.innerHTML = todayBookings.sort((a,b) => b.createdAt.localeCompare(a.createdAt)).map(b => `
+                <div class="admin-card mb-3 flex justify-between items-center">
+                    <div>
+                        <div class="flex items-center gap-3 mb-1">
+                            <span class="text-cyan-400 font-bold text-lg">${b.id}</span>
+                            <span class="status-badge status-${b.status}">${b.status.toUpperCase()}</span>
+                        </div>
+                        <p class="text-sm"><strong>${b.name}</strong> | ${b.phone}</p>
+                        <p class="text-xs text-gray-400">Table ${b.table} | ${b.time} | ${b.people} people</p>
+                    </div>
+                    <div class="flex gap-2">
+                        ${b.status === 'pending' ? `
+                            <button onclick="manualCheckIn('${b.id}')" class="bg-green-600 text-white px-3 py-1 rounded text-sm">Check In</button>
+                            <button onclick="cancelBooking('${b.id}')" class="bg-red-600 text-white px-3 py-1 rounded text-sm">Cancel</button>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function searchBookings() {
+            const query = document.getElementById('search-booking').value.toLowerCase();
+            const list = document.getElementById('bookings-list');
+            
+            const filtered = bookings.filter(b => 
+                b.id.toLowerCase().includes(query) || 
+                b.phone.includes(query) ||
+                b.name.toLowerCase().includes(query)
+            );
+            
+            if (filtered.length === 0) {
+                list.innerHTML = '<p class="text-center text-gray-400 py-8">No bookings found</p>';
+                return;
+            }
+            
+            list.innerHTML = filtered.map(b => `
+                <div class="admin-card mb-3 flex justify-between items-center">
+                    <div>
+                        <div class="flex items-center gap-3 mb-1">
+                            <span class="text-cyan-400 font-bold text-lg">${b.id}</span>
+                            <span class="status-badge status-${b.status}">${b.status.toUpperCase()}</span>
+                        </div>
+                        <p class="text-sm"><strong>${b.name}</strong> | ${b.phone}</p>
+                        <p class="text-xs text-gray-400">Table ${b.table} | ${b.date} | ${b.time}</p>
+                    </div>
+                    <div class="flex gap-2">
+                        ${b.status === 'pending' ? `
+                            <button onclick="manualCheckIn('${b.id}')" class="bg-green-600 text-white px-3 py-1 rounded text-sm">Check In</button>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function refreshBookings() {
+            bookings = JSON.parse(localStorage.getItem('bluebell_bookings')) || [];
+            loadBookings();
+            document.getElementById('search-booking').value = '';
+        }
+
+        function manualCheckIn(id) {
+            const booking = bookings.find(b => b.id === id);
+            if (booking) {
+                booking.status = 'checked';
+                localStorage.setItem('bluebell_bookings', JSON.stringify(bookings));
+                loadBookings();
+                alert(`✅ Booking ${id} marked as checked in!`);
+            }
+        }
+
+        function cancelBooking(id) {
+            if (!confirm('Are you sure to cancel this booking?')) return;
+            
+            const booking = bookings.find(b => b.id === id);
+            if (booking) {
+                booking.status = 'cancelled';
+                localStorage.setItem('bluebell_bookings', JSON.stringify(bookings));
+                loadBookings();
+            }
+        }
+
+        // QR Scanner
+        function openScanner() {
+            document.getElementById('scanner-modal').classList.remove('hidden');
+            document.getElementById('scan-result').classList.add('hidden');
+            
+            html5QrCode = new Html5Qrcode("reader");
+            html5QrCode.start(
+                { facingMode: "environment" },
+                { fps: 10, qrbox: { width: 250, height: 250 } },
+                onScanSuccess,
+                onScanError
+            );
+        }
+
+        function closeScanner() {
+            if (html5QrCode) {
+                html5QrCode.stop().then(() => {
+                    html5QrCode.clear();
+                });
+            }
+            document.getElementById('scanner-modal').classList.add('hidden');
+        }
+
+        function onScanSuccess(decodedText) {
+            const booking = bookings.find(b => b.id === decodedText && b.status === 'pending');
+            
+            if (booking) {
+                currentScanBooking = booking;
+                document.getElementById('scan-result').classList.remove('hidden');
+                document.getElementById('scan-details').innerHTML = `
+                    <strong>Booking ID:</strong> ${booking.id}<br>
+                    <strong>Name:</strong> ${booking.name}<br>
+                    <strong>Table:</strong> ${booking.table}<br>
+                    <strong>Time:</strong> ${booking.time}
+                `;
+                
+                // Stop scanning
+                html5QrCode.stop();
+            } else {
+                alert('Invalid or already checked-in booking!');
+            }
+        }
+
+        function onScanError(error) {
+            // console.warn(error);
+        }
+
+        function markCheckedIn() {
+            if (currentScanBooking) {
+                currentScanBooking.status = 'checked';
+                localStorage.setItem('bluebell_bookings', JSON.stringify(bookings));
+                closeScanner();
+                loadBookings();
+                alert(`✅ Booking ${currentScanBooking.id} checked in successfully!`);
+                currentScanBooking = null;
+            }
+        }
+
+        // Initialize
         loadItems();
         updateCart();
     </script>
