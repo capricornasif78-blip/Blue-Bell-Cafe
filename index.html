@@ -262,25 +262,26 @@
 <body class="geometric-pattern">
 
     <!-- Header -->
-    <header class="fixed top-0 w-full bg-black/90 border-b border-blue-500/50 z-50 p-4">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div>
-                <h1 class="text-3xl font-bold text-white">🔔 Blue Bell Cafe</h1>
-                <p class="text-cyan-400 text-sm">A-586 11 B, North Karachi | 0321-2223727</p>
-            </div>
-            <div class="flex gap-3">
-                <button onclick="openAdmin()" class="bg-purple-600 px-4 py-2 rounded-full text-white font-semibold hover:bg-purple-500 transition text-sm">
-                    🔐 Staff
-                </button>
-                <button onclick="openReservation()" class="bg-green-600 px-4 py-2 rounded-full text-white font-semibold hover:bg-green-500 transition">
-                    Book Table
-                </button>
-                <button onclick="toggleCart()" class="bg-blue-600 px-4 py-2 rounded-full text-white">
-                    Cart (<span id="cart-count">0</span>)
-                </button>
-            </div>
+<header class="fixed top-0 w-full bg-black z-50 py-2 px-4 shadow-lg" style="background-color: #000814 !important; height: 60px;">
+    <div class="max-w-7xl mx-auto flex justify-between items-center h-full">
+        <div class="flex-shrink-0">
+            <h1 class="text-xl font-bold text-white leading-tight">🔔 Blue Bell Cafe</h1>
+            <p class="text-cyan-400 text-xs leading-tight">A-586 11 B, North Karachi | 0321-2223727</p>
         </div>
-    </header>
+        <div class="flex gap-2">
+            <button onclick="openAdmin()" class="bg-purple-600 px-3 py-1.5 rounded-full text-white font-semibold hover:bg-purple-500 transition text-xs">
+                🔐 Staff
+            </button>
+            <button onclick="openReservation()" class="bg-green-600 px-3 py-1.5 rounded-full text-white font-semibold hover:bg-green-500 transition text-xs">
+                Book
+            </button>
+            <button onclick="toggleCart()" class="bg-blue-600 px-3 py-1.5 rounded-full text-white text-xs">
+                Cart(<span id="cart-count">0</span>)
+            </button>
+        </div>
+    </div>
+</header>
+    
 
     <!-- Hero -->
     <section class="pt-32 pb-10 px-4 text-center">
