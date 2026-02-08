@@ -262,29 +262,28 @@
 <body class="geometric-pattern">
 
     <!-- Header -->
-<header class="fixed top-0 w-full bg-black z-50 py-2 px-4 shadow-lg" style="background-color: #000814 !important; height: 60px;">
-    <div class="max-w-7xl mx-auto flex justify-between items-center h-full">
-        <div class="flex-shrink-0">
-            <h1 class="text-xl font-bold text-white leading-tight">🔔 Blue Bell Cafe</h1>
-            <p class="text-cyan-400 text-xs leading-tight">A-586 11 B, North Karachi | 0321-2223727</p>
+    <header class="fixed top-0 w-full bg-black/90 border-b border-blue-500/50 z-50 p-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold text-white">🔔 Blue Bell Cafe</h1>
+                <p class="text-cyan-400 text-sm">A-586 11 B, North Karachi | 0321-2223727</p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="openAdmin()" class="bg-purple-600 px-4 py-2 rounded-full text-white font-semibold hover:bg-purple-500 transition text-sm">
+                    🔐 Staff
+                </button>
+                <button onclick="openReservation()" class="bg-green-600 px-4 py-2 rounded-full text-white font-semibold hover:bg-green-500 transition">
+                    Book Table
+                </button>
+                <button onclick="toggleCart()" class="bg-blue-600 px-4 py-2 rounded-full text-white">
+                    Cart (<span id="cart-count">0</span>)
+                </button>
+            </div>
         </div>
-        <div class="flex gap-2">
-            <button onclick="openAdmin()" class="bg-purple-600 px-3 py-1.5 rounded-full text-white font-semibold hover:bg-purple-500 transition text-xs">
-                🔐 Staff
-            </button>
-            <button onclick="openReservation()" class="bg-green-600 px-3 py-1.5 rounded-full text-white font-semibold hover:bg-green-500 transition text-xs">
-                Book
-            </button>
-            <button onclick="toggleCart()" class="bg-blue-600 px-3 py-1.5 rounded-full text-white text-xs">
-                Cart(<span id="cart-count">0</span>)
-            </button>
-        </div>
-    </div>
-</header>
-    
+    </header>
 
     <!-- Hero -->
-    <section class="pt-20 pb-10 px-4 text-center 
+    <section class="pt-32 pb-10 px-4 text-center">
         <h2 class="text-5xl font-bold mb-4 text-white">Premium Fast Food</h2>
         <p class="text-xl text-gray-300 mb-8">Best Chinese, BBQ, Steaks & Burgers in Town</p>
         
@@ -403,15 +402,15 @@
                 <div class="mb-4">
                     <label class="block text-sm mb-2">Select Time *</label>
                     <div class="grid grid-cols-3 gap-2" id="time-slots">
-                        <div class="time-slot" onclick="selectTime(this, '12:00 PM')">12:00 PM</div>
-                        <div class="time-slot" onclick="selectTime(this, '1:00 PM')">1:00 PM</div>
-                        <div class="time-slot" onclick="selectTime(this, '2:00 PM')">2:00 PM</div>
                         <div class="time-slot" onclick="selectTime(this, '6:00 PM')">6:00 PM</div>
                         <div class="time-slot" onclick="selectTime(this, '7:00 PM')">7:00 PM</div>
                         <div class="time-slot" onclick="selectTime(this, '8:00 PM')">8:00 PM</div>
                         <div class="time-slot" onclick="selectTime(this, '9:00 PM')">9:00 PM</div>
                         <div class="time-slot" onclick="selectTime(this, '10:00 PM')">10:00 PM</div>
                         <div class="time-slot" onclick="selectTime(this, '11:00 PM')">11:00 PM</div>
+                        <div class="time-slot" onclick="selectTime(this, '12:00 AM')">12:00 AM</div>
+                        <div class="time-slot" onclick="selectTime(this, '1:00 AM')">1:00 AM</div>
+                        <div class="time-slot" onclick="selectTime(this, '2:00 AM')">2:00 AM</div>
                     </div>
                 </div>
 
@@ -479,7 +478,8 @@
                 
                 <div style="background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 15px; text-align: center; margin-bottom: 15px;">
                     <p style="font-weight: bold; color: #856404; margin-bottom: 5px;">⚠️ IMPORTANT</p>
-                    <p style="font-size: 0.85rem; color: #856404;">Show this receipt at reception and it will be scan by staff</p>
+                    <p style="font-size: 0.85rem; color: #856404;">Show this receipt at entrance</p>
+                    <p style="font-size: 0.85rem; color: #856404;">Valid for 15 minutes after reservation time</p>
                 </div>
 
                 <div style="text-align: center; padding-top: 15px; border-top: 1px solid #ddd;">
@@ -592,7 +592,7 @@
         <h3 class="text-2xl font-bold mb-4">🔔 Blue Bell Cafe</h3>
         <p class="text-gray-400 mb-2">A-586 11 B, North Karachi, Karachi 74700</p>
         <p class="text-cyan-400 text-xl mb-4">📞 0321-2223727</p>
-        <p class="text-gray-500 text-sm">Open Daily: 12:00 PM - 12:00 AM</p>
+        <p class="text-gray-500 text-sm">Open Daily: 6:00 PM - 3:00 AM</p>
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
