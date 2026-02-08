@@ -145,6 +145,7 @@
             border-radius: 10px;
             max-width: 400px;
             margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         
         .booking-id {
@@ -152,11 +153,11 @@
             color: black;
             padding: 10px;
             border-radius: 5px;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             font-weight: bold;
             text-align: center;
             margin: 15px 0;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
         }
         
         .modal {
@@ -195,7 +196,6 @@
             color: black;
         }
         
-        /* Admin Panel Styles */
         .admin-card {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -212,18 +212,29 @@
         
         .status-pending { background: #fbbf24; color: black; }
         .status-checked { background: #10b981; color: white; }
-        .status-cancelled { background: #ef4444; color: white; }
-        
-        .scanner-container {
-            width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
-        }
         
         #reader {
             border: 2px solid #00d4ff !important;
             border-radius: 12px;
             overflow: hidden;
+        }
+        
+        .download-btn {
+            background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+            color: black;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            transition: transform 0.3s;
+        }
+        
+        .download-btn:hover {
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -237,8 +248,8 @@
                 <p class="text-cyan-400 text-sm">A-586 11 B, North Karachi | 0321-2223727</p>
             </div>
             <div class="flex gap-3">
-                <button onclick="openAdmin()" class="bg-purple-600 px-4 py-2 rounded-full text-white font-semibold hover:bg-purple-500 transition">
-                    🔐 Staff Login
+                <button onclick="openAdmin()" class="bg-purple-600 px-4 py-2 rounded-full text-white font-semibold hover:bg-purple-500 transition text-sm">
+                    🔐 Staff
                 </button>
                 <button onclick="openReservation()" class="bg-green-600 px-4 py-2 rounded-full text-white font-semibold hover:bg-green-500 transition">
                     Book Table
@@ -250,7 +261,7 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
+    <!-- Hero -->
     <section class="pt-32 pb-10 px-4 text-center">
         <h2 class="text-5xl font-bold mb-4 text-white">Premium Fast Food</h2>
         <p class="text-xl text-gray-300 mb-8">Best Chinese, BBQ, Steaks & Burgers in Town</p>
@@ -258,10 +269,10 @@
         <img src="Screenshot 2026-02-08 140953.png" alt="Blue Bell Cafe" class="hero-img mx-auto mb-8">
         
         <div class="flex gap-4 justify-center flex-wrap">
-            <button onclick="openReservation()" class="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-4 rounded-full font-bold text-lg">
+            <button onclick="openReservation()" class="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:scale-105 transition">
                 📅 Reserve Table Now
             </button>
-            <button onclick="document.getElementById('menu').scrollIntoView({behavior: 'smooth'})" class="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-8 py-4 rounded-full font-bold text-lg">
+            <button onclick="document.getElementById('menu').scrollIntoView({behavior: 'smooth'})" class="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:scale-105 transition">
                 🍔 Order Food
             </button>
         </div>
@@ -294,7 +305,7 @@
         </div>
     </section>
 
-    <!-- Menu Section -->
+    <!-- Menu -->
     <section id="menu" class="px-4 mb-8 sticky top-20 bg-black/80 py-4 z-40">
         <div class="max-w-7xl mx-auto flex flex-wrap justify-center">
             <button class="category-btn active" onclick="showCategory('all')">All</button>
@@ -317,7 +328,7 @@
         </div>
     </section>
 
-    <!-- Cart Sidebar -->
+    <!-- Cart -->
     <div id="cart-sidebar" class="cart-box hidden">
         <h3 class="text-xl font-bold mb-4 text-cyan-400">Your Order</h3>
         <div id="cart-items"></div>
@@ -337,22 +348,22 @@
 
             <div id="step1">
                 <div class="mb-4">
-                    <label class="block text-sm mb-2">Your Name</label>
+                    <label class="block text-sm mb-2">Your Name *</label>
                     <input type="text" id="res-name" class="w-full p-3 rounded bg-blue-900/50 border border-blue-500 text-white" placeholder="Enter your name">
                 </div>
                 
                 <div class="mb-4">
-                    <label class="block text-sm mb-2">Phone Number</label>
+                    <label class="block text-sm mb-2">Phone Number *</label>
                     <input type="tel" id="res-phone" class="w-full p-3 rounded bg-blue-900/50 border border-blue-500 text-white" placeholder="03XX-XXXXXXX">
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>
-                        <label class="block text-sm mb-2">Date</label>
+                        <label class="block text-sm mb-2">Date *</label>
                         <input type="date" id="res-date" class="w-full p-3 rounded bg-blue-900/50 border border-blue-500 text-white">
                     </div>
                     <div>
-                        <label class="block text-sm mb-2">People</label>
+                        <label class="block text-sm mb-2">People *</label>
                         <select id="res-people" class="w-full p-3 rounded bg-blue-900/50 border border-blue-500 text-white">
                             <option value="2">2 People</option>
                             <option value="4">4 People</option>
@@ -364,7 +375,7 @@
                 </div>
 
                 <div class="mb-4">
-                    <label class="block text-sm mb-2">Select Time</label>
+                    <label class="block text-sm mb-2">Select Time *</label>
                     <div class="grid grid-cols-3 gap-2" id="time-slots">
                         <div class="time-slot" onclick="selectTime(this, '12:00 PM')">12:00 PM</div>
                         <div class="time-slot" onclick="selectTime(this, '1:00 PM')">1:00 PM</div>
@@ -378,11 +389,11 @@
                     </div>
                 </div>
 
-                <button onclick="goToStep2()" class="w-full bg-cyan-400 text-black py-3 rounded-lg font-bold">Next: Select Table</button>
+                <button onclick="goToStep2()" class="w-full bg-cyan-400 text-black py-3 rounded-lg font-bold hover:bg-cyan-300 transition">Next: Select Table</button>
             </div>
 
             <div id="step2" class="hidden">
-                <p class="text-center mb-4 text-gray-300">Click on available table (Green = Available)</p>
+                <p class="text-center mb-4 text-gray-300">Click on available table (Green = Available, Red = Booked)</p>
                 <div class="table-grid mb-6" id="table-grid"></div>
                 <div class="flex gap-3">
                     <button onclick="backToStep1()" class="flex-1 bg-gray-600 text-white py-3 rounded-lg font-bold">Back</button>
@@ -392,63 +403,84 @@
         </div>
     </div>
 
-    <!-- Receipt Modal -->
+    <!-- Receipt Modal - NO WHATSAPP -->
     <div id="receipt-modal" class="modal hidden">
-        <div class="modal-content" style="max-width: 450px;">
-            <div class="receipt" id="receipt-content">
+        <div class="modal-content" style="max-width: 450px; background: white; color: black; padding: 0; overflow: hidden;">
+            
+            <!-- Receipt Content -->
+            <div id="receipt-content" style="padding: 30px; background: white;">
                 <div class="text-center border-b-2 border-dashed border-gray-400 pb-4 mb-4">
-                    <h2 class="text-2xl font-bold">BLUE BELL CAFE</h2>
-                    <p class="text-sm">A-586 11 B, North Karachi</p>
-                    <p class="text-sm">Tel: 0321-2223727</p>
+                    <h2 class="text-3xl font-bold text-blue-600">🔔 BLUE BELL CAFE</h2>
+                    <p class="text-sm text-gray-600 mt-1">A-586 11 B, North Karachi</p>
+                    <p class="text-sm text-gray-600">Tel: 0321-2223727</p>
+                    <p class="text-xs text-gray-500 mt-1">Premium Fast Food Restaurant</p>
                 </div>
                 
                 <div class="text-center mb-4">
-                    <p class="text-sm text-gray-600 font-bold">BOOKING CONFIRMATION</p>
-                    <div class="booking-id" id="booking-id">BB-78452</div>
+                    <p class="text-sm text-gray-600 font-bold uppercase tracking-wider">Table Reservation</p>
+                    <div class="booking-id" id="booking-id" style="background: linear-gradient(135deg, #00d4ff, #0099ff); color: black; padding: 15px; border-radius: 8px; font-size: 1.8rem; font-weight: bold; letter-spacing: 4px; margin: 15px 0; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">BB-78452</div>
                 </div>
 
-                <div class="space-y-2 text-sm mb-4">
-                    <div class="flex justify-between border-b border-gray-200 pb-1">
-                        <span><strong>Name:</strong></span>
-                        <span id="receipt-name">John Doe</span>
+                <div class="space-y-3 text-sm mb-6" style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                    <div class="flex justify-between border-b border-gray-300 pb-2">
+                        <span class="text-gray-600"><strong>Customer:</strong></span>
+                        <span id="receipt-name" class="font-semibold">John Doe</span>
                     </div>
-                    <div class="flex justify-between border-b border-gray-200 pb-1">
-                        <span><strong>Phone:</strong></span>
-                        <span id="receipt-phone">03XX-XXXXXXX</span>
+                    <div class="flex justify-between border-b border-gray-300 pb-2">
+                        <span class="text-gray-600"><strong>Phone:</strong></span>
+                        <span id="receipt-phone" class="font-semibold">03XX-XXXXXXX</span>
                     </div>
-                    <div class="flex justify-between border-b border-gray-200 pb-1">
-                        <span><strong>Date:</strong></span>
-                        <span id="receipt-date">2024-01-15</span>
+                    <div class="flex justify-between border-b border-gray-300 pb-2">
+                        <span class="text-gray-600"><strong>Date:</strong></span>
+                        <span id="receipt-date" class="font-semibold">2024-01-15</span>
                     </div>
-                    <div class="flex justify-between border-b border-gray-200 pb-1">
-                        <span><strong>Time:</strong></span>
-                        <span id="receipt-time">7:00 PM</span>
+                    <div class="flex justify-between border-b border-gray-300 pb-2">
+                        <span class="text-gray-600"><strong>Time:</strong></span>
+                        <span id="receipt-time" class="font-semibold text-blue-600">7:00 PM</span>
                     </div>
-                    <div class="flex justify-between border-b border-gray-200 pb-1">
-                        <span><strong>People:</strong></span>
-                        <span id="receipt-people">4 People</span>
+                    <div class="flex justify-between border-b border-gray-300 pb-2">
+                        <span class="text-gray-600"><strong>Guests:</strong></span>
+                        <span id="receipt-people" class="font-semibold">4 People</span>
                     </div>
-                    <div class="flex justify-between border-b border-gray-200 pb-1">
-                        <span><strong>Table:</strong></span>
-                        <span id="receipt-table">Table 5</span>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600"><strong>Table Number:</strong></span>
+                        <span id="receipt-table" class="font-semibold text-2xl text-green-600">Table 5</span>
                     </div>
                 </div>
 
-                <div id="qrcode" class="flex justify-center"></div>
+                <div class="flex justify-center mb-4">
+                    <div id="qrcode" style="padding: 10px; background: white; border: 2px solid #00d4ff; border-radius: 10px;"></div>
+                </div>
                 
-                <p class="text-xs text-center text-gray-600 mt-4">
-                    <strong>Show this receipt at entrance</strong><br>
-                    Valid for 15 minutes after reservation time<br>
-                    Staff will scan QR code to verify
-                </p>
+                <div class="text-center text-xs text-gray-500 mt-4 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                    <p class="font-bold text-yellow-800 mb-1">⚠️ IMPORTANT INSTRUCTIONS</p>
+                    <p>Show this receipt at the entrance</p>
+                    <p>Valid for 15 minutes after reservation time</p>
+                    <p>Staff will scan QR code to verify</p>
+                </div>
+
+                <div class="text-center mt-4 pt-4 border-t border-gray-300">
+                    <p class="text-xs text-gray-400">Thank you for choosing Blue Bell Cafe!</p>
+                    <p class="text-xs text-gray-400">Booking confirmed at: <span id="booking-time"></span></p>
+                </div>
             </div>
 
-            <button onclick="downloadReceipt()" class="w-full mt-4 bg-green-500 text-black py-3 rounded-lg font-bold">📥 Download Receipt</button>
-            <button onclick="closeReceipt()" class="w-full mt-3 bg-gray-600 text-white py-3 rounded-lg font-bold">Close</button>
+            <!-- Action Buttons -->
+            <div style="padding: 20px; background: #f8f9fa; border-top: 2px solid #e5e7eb;">
+                <button onclick="downloadReceiptImage()" class="download-btn">
+                    📸 Download Receipt Image
+                </button>
+                <button onclick="printReceipt()" class="w-full mt-3 bg-gray-700 text-white py-3 rounded-lg font-bold hover:bg-gray-600 transition">
+                    🖨️ Print Receipt
+                </button>
+                <button onclick="closeReceipt()" class="w-full mt-3 bg-red-500 text-white py-3 rounded-lg font-bold hover:bg-red-600 transition">
+                    Close
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- Admin Login Modal -->
+    <!-- Admin Login -->
     <div id="admin-login-modal" class="modal hidden">
         <div class="modal-content" style="max-width: 400px;">
             <div class="flex justify-between items-center mb-6">
@@ -469,12 +501,12 @@
             <button onclick="loginAdmin()" class="w-full bg-purple-600 text-white py-3 rounded-lg font-bold hover:bg-purple-500">Login</button>
             
             <p class="text-center mt-4 text-gray-400 text-sm">
-                Default: username: <strong>admin</strong> | password: <strong>bluebell123</strong>
+                Default: <strong>admin</strong> / <strong>bluebell123</strong>
             </p>
         </div>
     </div>
 
-    <!-- Admin Dashboard Modal -->
+    <!-- Admin Dashboard -->
     <div id="admin-dashboard" class="modal hidden">
         <div class="modal-content" style="max-width: 900px; width: 95%;">
             <div class="flex justify-between items-center mb-6">
@@ -489,7 +521,7 @@
             <!-- Search -->
             <div class="mb-6 flex gap-3">
                 <input type="text" id="search-booking" class="flex-1 p-3 rounded bg-blue-900/50 border border-blue-500 text-white" placeholder="Search by Booking ID or Phone..." onkeyup="searchBookings()">
-                <button onclick="refreshBookings()" class="bg-blue-600 px-6 py-3 rounded-lg text-white font-bold">🔄 Refresh</button>
+                <button onclick="refreshBookings()" class="bg-blue-600 px-6 py-3 rounded-lg text-white font-bold">🔄</button>
             </div>
 
             <!-- Stats -->
@@ -510,12 +542,11 @@
 
             <!-- Bookings List -->
             <div class="max-h-96 overflow-y-auto" id="bookings-list">
-                <!-- Bookings will be loaded here -->
             </div>
         </div>
     </div>
 
-    <!-- QR Scanner Modal -->
+    <!-- QR Scanner -->
     <div id="scanner-modal" class="modal hidden">
         <div class="modal-content" style="max-width: 600px;">
             <div class="flex justify-between items-center mb-4">
@@ -523,7 +554,7 @@
                 <button onclick="closeScanner()" class="text-gray-400 hover:text-white text-2xl">×</button>
             </div>
             
-            <div class="scanner-container">
+            <div style="width: 100%; max-width: 500px; margin: 0 auto;">
                 <div id="reader"></div>
             </div>
             
@@ -547,6 +578,7 @@
         <p class="text-gray-500 text-sm">Open Daily: 12:00 PM - 12:00 AM</p>
     </footer>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
         // Data
         const menuItems = [
@@ -622,6 +654,7 @@
         let bookings = JSON.parse(localStorage.getItem('bluebell_bookings')) || [];
         let currentScanBooking = null;
         let html5QrCode = null;
+        let currentBooking = null;
 
         // Menu Functions
         function loadItems() {
@@ -712,6 +745,13 @@
             document.getElementById('step1').classList.remove('hidden');
             document.getElementById('step2').classList.add('hidden');
             document.getElementById('res-date').value = new Date().toISOString().split('T')[0];
+            
+            // Reset
+            document.getElementById('res-name').value = '';
+            document.getElementById('res-phone').value = '';
+            document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+            reservationData = {};
+            selectedTable = null;
         }
 
         function closeReservation() {
@@ -749,7 +789,6 @@
             const grid = document.getElementById('table-grid');
             grid.innerHTML = '';
             
-            // Get booked tables for selected date/time
             const bookedTables = bookings
                 .filter(b => b.date === reservationData.date && b.time === reservationData.time && b.status !== 'cancelled')
                 .map(b => b.table);
@@ -787,13 +826,11 @@
             bookings.push(booking);
             localStorage.setItem('bluebell_bookings', JSON.stringify(bookings));
             
-            // Show receipt
+            currentBooking = booking;
             showReceipt(booking);
             closeReservation();
             
-            // WhatsApp notification
-            const msg = `New Reservation!\n\nID: ${booking.id}\nName: ${booking.name}\nPhone: ${booking.phone}\nDate: ${booking.date}\nTime: ${booking.time}\nTable: ${booking.table}\nPeople: ${booking.people}`;
-            window.open(`https://wa.me/923212223727?text=${encodeURIComponent(msg)}`, '_blank');
+            // NO WHATSAPP MESSAGE - Only show receipt
         }
 
         function showReceipt(booking) {
@@ -805,12 +842,16 @@
             document.getElementById('receipt-time').textContent = booking.time;
             document.getElementById('receipt-people').textContent = booking.people + ' People';
             document.getElementById('receipt-table').textContent = 'Table ' + booking.table;
+            document.getElementById('booking-time').textContent = new Date().toLocaleString();
             
             document.getElementById('qrcode').innerHTML = '';
             new QRCode(document.getElementById('qrcode'), {
                 text: booking.id,
-                width: 128,
-                height: 128
+                width: 150,
+                height: 150,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
             });
         }
 
@@ -818,8 +859,45 @@
             document.getElementById('receipt-modal').classList.add('hidden');
         }
 
-        function downloadReceipt() {
-            alert('Screenshot le lo ya print kar lo! Download feature yahan nahi chal raha.');
+        function downloadReceiptImage() {
+            const receiptContent = document.getElementById('receipt-content');
+            
+            html2canvas(receiptContent, {
+                scale: 2,
+                backgroundColor: '#ffffff',
+                useCORS: true
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `BlueBell-Receipt-${currentBooking.id}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                
+                alert('✅ Receipt downloaded! Show this at the restaurant.');
+            }).catch(err => {
+                console.error('Error:', err);
+                alert('Screenshot le lo! Download nahi ho raha.');
+            });
+        }
+
+        function printReceipt() {
+            const printContent = document.getElementById('receipt-content').innerHTML;
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>Blue Bell Cafe - Receipt</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 20px; max-width: 400px; margin: 0 auto; }
+                        .booking-id { background: #00d4ff; padding: 15px; text-align: center; font-size: 1.5rem; font-weight: bold; border-radius: 8px; margin: 15px 0; }
+                    </style>
+                </head>
+                <body>
+                    ${printContent}
+                    <script>window.print();<\/script>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
         }
 
         // Admin Functions
@@ -861,7 +939,6 @@
             const today = new Date().toISOString().split('T')[0];
             const todayBookings = bookings.filter(b => b.date === today);
             
-            // Update stats
             document.getElementById('stat-pending').textContent = todayBookings.filter(b => b.status === 'pending').length;
             document.getElementById('stat-checked').textContent = todayBookings.filter(b => b.status === 'checked').length;
             document.getElementById('stat-total').textContent = todayBookings.length;
@@ -884,8 +961,7 @@
                     <div class="flex gap-2">
                         ${b.status === 'pending' ? `
                             <button onclick="manualCheckIn('${b.id}')" class="bg-green-600 text-white px-3 py-1 rounded text-sm">Check In</button>
-                            <button onclick="cancelBooking('${b.id}')" class="bg-red-600 text-white px-3 py-1 rounded text-sm">Cancel</button>
-                        ` : ''}
+                        ` : '<span class="text-green-400 text-2xl">✓</span>'}
                     </div>
                 </div>
             `).join('');
@@ -937,18 +1013,7 @@
                 booking.status = 'checked';
                 localStorage.setItem('bluebell_bookings', JSON.stringify(bookings));
                 loadBookings();
-                alert(`✅ Booking ${id} marked as checked in!`);
-            }
-        }
-
-        function cancelBooking(id) {
-            if (!confirm('Are you sure to cancel this booking?')) return;
-            
-            const booking = bookings.find(b => b.id === id);
-            if (booking) {
-                booking.status = 'cancelled';
-                localStorage.setItem('bluebell_bookings', JSON.stringify(bookings));
-                loadBookings();
+                alert(`✅ Booking ${id} checked in!`);
             }
         }
 
@@ -968,9 +1033,7 @@
 
         function closeScanner() {
             if (html5QrCode) {
-                html5QrCode.stop().then(() => {
-                    html5QrCode.clear();
-                });
+                html5QrCode.stop().then(() => html5QrCode.clear());
             }
             document.getElementById('scanner-modal').classList.add('hidden');
         }
@@ -987,17 +1050,13 @@
                     <strong>Table:</strong> ${booking.table}<br>
                     <strong>Time:</strong> ${booking.time}
                 `;
-                
-                // Stop scanning
                 html5QrCode.stop();
             } else {
                 alert('Invalid or already checked-in booking!');
             }
         }
 
-        function onScanError(error) {
-            // console.warn(error);
-        }
+        function onScanError(error) {}
 
         function markCheckedIn() {
             if (currentScanBooking) {
@@ -1005,7 +1064,7 @@
                 localStorage.setItem('bluebell_bookings', JSON.stringify(bookings));
                 closeScanner();
                 loadBookings();
-                alert(`✅ Booking ${currentScanBooking.id} checked in successfully!`);
+                alert(`✅ Booking ${currentScanBooking.id} checked in!`);
                 currentScanBooking = null;
             }
         }
