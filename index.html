@@ -248,7 +248,6 @@
             transform: scale(1.05);
         }
 
-        /* Warning Message */
         .sync-warning {
             background: #ff6b6b;
             color: white;
@@ -368,7 +367,6 @@
                 <button onclick="closeReservation()" class="text-gray-400 hover:text-white text-2xl">×</button>
             </div>
 
-            <!-- Sync Warning -->
             <div class="sync-warning">
                 ⚠️ Please use the same device/browser for booking and check-in
             </div>
@@ -430,10 +428,9 @@
         </div>
     </div>
 
-    <!-- Receipt Modal - FIXED -->
+    <!-- Receipt Modal -->
     <div id="receipt-modal" class="modal hidden" style="align-items: flex-start; padding-top: 20px;">
         <div class="modal-content-receipt">
-            <!-- Receipt Content -->
             <div id="receipt-content" style="padding: 30px; background: white;">
                 <div class="text-center border-b-2 border-dashed border-gray-400 pb-4 mb-4">
                     <h2 class="text-3xl font-bold text-blue-600">🔔 BLUE BELL CAFE</h2>
@@ -491,7 +488,6 @@
                 </div>
             </div>
 
-            <!-- Action Buttons -->
             <div style="padding: 20px; background: #f8f9fa; border-top: 2px solid #e5e7eb;">
                 <button onclick="downloadReceiptImage()" class="download-btn">
                     📸 Download Receipt Image
@@ -506,7 +502,7 @@
         </div>
     </div>
 
-    <!-- Admin Login -->
+    <!-- Admin Login Modal - NO DEFAULT CREDENTIALS -->
     <div id="admin-login-modal" class="modal hidden">
         <div class="modal-content" style="max-width: 400px;">
             <div class="flex justify-between items-center mb-6">
@@ -526,9 +522,7 @@
             
             <button onclick="loginAdmin()" class="w-full bg-purple-600 text-white py-3 rounded-lg font-bold hover:bg-purple-500">Login</button>
             
-            <p class="text-center mt-4 text-gray-400 text-sm">
-                Default: <strong>admin</strong> / <strong>bluebell123</strong>
-            </p>
+            <!-- NO DEFAULT CREDENTIALS SHOWN -->
         </div>
     </div>
 
@@ -544,13 +538,11 @@
                 </div>
             </div>
 
-            <!-- Search -->
             <div class="mb-6 flex gap-3">
                 <input type="text" id="search-booking" class="flex-1 p-3 rounded bg-blue-900/50 border border-blue-500 text-white" placeholder="Search by Booking ID or Phone..." onkeyup="searchBookings()">
                 <button onclick="refreshBookings()" class="bg-blue-600 px-6 py-3 rounded-lg text-white font-bold">🔄</button>
             </div>
 
-            <!-- Stats -->
             <div class="grid grid-cols-3 gap-4 mb-6">
                 <div class="admin-card text-center">
                     <div class="text-3xl font-bold text-yellow-400" id="stat-pending">0</div>
@@ -566,7 +558,6 @@
                 </div>
             </div>
 
-            <!-- Bookings List -->
             <div class="max-h-96 overflow-y-auto" id="bookings-list">
             </div>
         </div>
@@ -772,7 +763,6 @@
             document.getElementById('step2').classList.add('hidden');
             document.getElementById('res-date').value = new Date().toISOString().split('T')[0];
             
-            // Reset
             document.getElementById('res-name').value = '';
             document.getElementById('res-phone').value = '';
             document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
@@ -815,7 +805,6 @@
             const grid = document.getElementById('table-grid');
             grid.innerHTML = '';
             
-            // Get fresh data from localStorage
             const currentBookings = JSON.parse(localStorage.getItem('bluebell_bookings')) || [];
             
             const bookedTables = currentBookings
@@ -964,7 +953,6 @@
         }
 
         function loadBookings() {
-            // Fresh data from localStorage
             bookings = JSON.parse(localStorage.getItem('bluebell_bookings')) || [];
             
             const list = document.getElementById('bookings-list');
